@@ -53,6 +53,23 @@
                                                  [".om-css_core-spec_Child2__p" {:font-weight 'bold}]
                                                  [".om-css_core-spec_Child2__p2" {:font-weight 'normal}]]))
 
+(defui Foo
+  static css/CSS
+  (css [this]
+      [[:.$global {:color "blue"}]
+       [:.local {:color "red"}]
+       [:span {:color "green"}]])
+ Object
+ (render [this]
+        (dom/div nil "test")))
+
+(specification "call-css function"
+              (assertions
+               "Converts keywords ':.*' -> local-kw, ':.$*' -> global-kw, :* -> no morphing"
+               (css/call-css Foo) => [[".global" {:color "blue"}]
+                                      [".om-css_core-spec_Foo__local" {:color "red"}]
+                                      [:span {:color "green"}]]))
+
 (defrecord X [])
 
 (defui Boo
