@@ -7,13 +7,8 @@
             [om.next :as om]
             [cljs.core]))
 
-
 (defprotocol CSS
   (css [this] "Specifies the component-local CSS"))
-
-(defn call-css [component]
-  #?(:clj ((:css (meta component)) component)
-     :cljs (css component)))
 
 (defn cssify
   "Replaces slashes and dots with underscore."
@@ -28,9 +23,17 @@
 (defn local-kw
   "Generate a keyword for a localized CSS class for use in Garden CSS syntax as a localized component classname keyword."
   ([comp-class]
-   (keyword (str "." (cssify (fq-component comp-class)))))
+   (str "." (cssify (fq-component comp-class))))
   ([comp-class nm]
-   (keyword (str "." (cssify (fq-component comp-class)) "__" (name nm)))))
+    (str "." (cssify (fq-component comp-class)) "__" (name nm))))
+
+(defn call-css [component]
+  (sp/transform (sp/walker #(and (keyword? %) (str/starts-with? (name %) ".")))
+                #(let [name (subs (name %) 1)]
+                   (if (str/starts-with? name "$")
+                     (str "." (subs name 1))
+                     (local-kw component (keyword name))))
+                #?(:clj ((:css (meta component)) component) :cljs (css component))))
 
 (defn local-class
   "Generates a string name of a localized CSS class. This function combines the fully-qualified name of the given class

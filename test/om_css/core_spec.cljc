@@ -39,19 +39,19 @@
 (specification "CSS merge"
   (assertions
     "Allows a component to specify a single rule"
-    (css/css-merge Child) => [[:.om-css_core-spec_Child__p {:font-weight 'bold}]]
+    (css/css-merge Child) => [[".om-css_core-spec_Child__p" {:font-weight 'bold}]]
     "Allows a component to specify multiple rules"
-    (css/css-merge Child2) => [[:.om-css_core-spec_Child2__p {:font-weight 'bold}]
-                               [:.om-css_core-spec_Child2__p2 {:font-weight 'normal}]]
+    (css/css-merge Child2) => [[".om-css_core-spec_Child2__p" {:font-weight 'bold}]
+                               [".om-css_core-spec_Child2__p2" {:font-weight 'normal}]]
     "Allows component combinations"
-    (css/css-merge Child Child2) => [[:.om-css_core-spec_Child__p {:font-weight 'bold}]
-                                     [:.om-css_core-spec_Child2__p {:font-weight 'bold}]
-                                     [:.om-css_core-spec_Child2__p2 {:font-weight 'normal}]]
+    (css/css-merge Child Child2) => [[".om-css_core-spec_Child__p" {:font-weight 'bold}]
+                                     [".om-css_core-spec_Child2__p" {:font-weight 'bold}]
+                                     [".om-css_core-spec_Child2__p2" {:font-weight 'normal}]]
     "Merges rules in with component css"
-    (css/css-merge Child [:a {:x 1}] Child2) => [[:.om-css_core-spec_Child__p {:font-weight 'bold}]
+    (css/css-merge Child [:a {:x 1}] Child2) => [[".om-css_core-spec_Child__p" {:font-weight 'bold}]
                                                  [:a {:x 1}]
-                                                 [:.om-css_core-spec_Child2__p {:font-weight 'bold}]
-                                                 [:.om-css_core-spec_Child2__p2 {:font-weight 'normal}]]))
+                                                 [".om-css_core-spec_Child2__p" {:font-weight 'bold}]
+                                                 [".om-css_core-spec_Child2__p2" {:font-weight 'normal}]]))
 
 (defrecord X [])
 
