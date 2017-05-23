@@ -96,7 +96,9 @@
   [component]
   (let [local-rules (localize-css component (get-local-css component))
         global-rules (get-global-css component)
-        children-rules (if (childrenCSS? component) (apply #(get-css %) (get-children-css component)) [])]
+        children-rules (if (childrenCSS? component)
+                         (reduce #(into %1 (get-css %2)) [] (get-children-css component))
+                         [])]
     (concat local-rules global-rules children-rules)))
 
 (defn prefixed-keyword?
