@@ -17,9 +17,8 @@
   (children-css [this] "Specifies the component's children that implement either localCSS or global CSS or both"))
 
 (defn implements-protocol?
-  [x protocol protocol-key]
   #?(:cljs {:tag boolean})
-  [x]
+  [x protocol protocol-key]
   #?(:clj (if (fn? x)
             (some? (-> x meta protocol-key))
             (extends? protocol (class x)))
