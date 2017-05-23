@@ -34,6 +34,18 @@
   (render [this]
     (dom/div nil "root")))
 
+(defui Child1
+  static css/localCSS
+  (local-css [this] [[:.child1class {:color "red"}]]))
+
+(defui Child2
+  static css/localCSS
+  (local-css [this] [[:.child2class {:color "blue"}]]))
+
+(defui Parent
+  static css/childrenCSS
+  (children-css [this] [Child1 Child2]))
+
 (specification "Obtain CSS from classes"
   (behavior "can be obtained from"
     (assertions
@@ -46,7 +58,10 @@
      (css/get-css Root) => '([:.om-css_core-spec_Root__container {:background-color "red"}]
                              [:.text {:color "green"}]
                              [:.om-css_core-spec_List__items-wrapper {:background-color "blue"}]
-                             [:.om-css_core-spec_ListItem__item {:font-weight "bold"}]))))
+                             [:.om-css_core-spec_ListItem__item {:font-weight "bold"}])
+     "a component with multiple direct children"
+     (css/get-css Parent) => '([:.om-css_core-spec_Child1__child1class {:color "red"}]
+                               [:.om-css_core-spec_Child2__child2class {:color "blue"}]))))
 
 
 (specification "Generate classnames from CSS"
