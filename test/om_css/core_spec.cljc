@@ -1,74 +1,69 @@
 (ns om-css.core-spec
   (:require #?(:cljs [untangled-spec.core :refer-macros [specification assertions behavior]]
                :clj  [untangled-spec.core :refer [specification assertions behavior]])
-            [om-css.core :as css]
+            [om-css.core :as css :refer [localize-classnames]]
             [om.next :as om :refer [defui]]
             [om.dom :as dom]))
 
-
-(defui ListItem
-  static css/localCSS
-  (local-css [this] [[:.item {:font-weight "bold"}]])
+(defui Child
+  static css/CSS
+  (css [this]
+    (let [p (css/local-kw Child :p)]
+      [p {:font-weight 'bold}]))
   Object
   (render [this]
-    (dom/li nil "listitem")))
-
-(defui List
-  static css/localCSS
-  (local-css [this] [[:.items-wrapper {:background-color "blue"}]])
-  static css/childrenCSS
-  (children-css [this] [ListItem])
-  Object
-  (render [this]
-    (dom/ul nil "list")))
-
-
-(defui Root
-  static css/localCSS
-  (local-css [this] [[:.container {:background-color "red"}]])
-  static css/globalCSS
-  (global-css [this] [[:.text {:color "green"}]])
-  static css/childrenCSS
-  (children-css [this] [List])
-  Object
-  (render [this]
-    (dom/div nil "root")))
-
-(defui Child1
-  static css/localCSS
-  (local-css [this] [[:.child1class {:color "red"}]]))
+    (let [{:keys [id label]} (om/props this)]
+      (dom/div nil "Hello"))))
 
 (defui Child2
-  static css/localCSS
-  (local-css [this] [[:.child2class {:color "blue"}]]))
+  static css/CSS
+  (css [this]
+    (let [p (css/local-kw Child2 :p)
+          p2 (css/local-kw Child2 :p2)]
+      [[p {:font-weight 'bold}] [p2 {:font-weight 'normal}]]))
+  Object
+  (render [this]
+    (let [{:keys [id label]} (om/props this)]
+      (dom/div nil "Hello"))))
 
-(defui Parent
-  static css/childrenCSS
-  (children-css [this] [Child1 Child2]))
-
-(specification "Obtain CSS from classes"
-  (behavior "can be obtained from"
+(specification "CSS local classes"
+  (behavior "can be generated for a class"
     (assertions
-     "a single component"
-     (css/get-css ListItem) => '([:.om-css_core-spec_ListItem__item {:font-weight "bold"}])
-     "a component with a child"
-     (css/get-css List) => '([:.om-css_core-spec_List__items-wrapper {:background-color "blue"}]
-                             [:.om-css_core-spec_ListItem__item {:font-weight "bold"}])
-     "a component with nested children"
-     (css/get-css Root) => '([:.om-css_core-spec_Root__container {:background-color "red"}]
-                             [:.text {:color "green"}]
-                             [:.om-css_core-spec_List__items-wrapper {:background-color "blue"}]
-                             [:.om-css_core-spec_ListItem__item {:font-weight "bold"}])
-     "a component with multiple direct children"
-     (css/get-css Parent) => '([:.om-css_core-spec_Child1__child1class {:color "red"}]
-                               [:.om-css_core-spec_Child2__child2class {:color "blue"}]))))
+      "with a keyword"
+      (css/local-class Child :root) => "om-css_core-spec_Child__root"
+      "with a string"
+      (css/local-class Child "root") => "om-css_core-spec_Child__root"
+      "with a symbol"
+      (css/local-class Child 'root) => "om-css_core-spec_Child__root")))
 
-
-(specification "Generate classnames from CSS"
+(specification "CSS merge"
   (assertions
-    "global classnames are untouched"
-    (:text (css/get-classnames Root)) => "text"
-    "local classnames are transformed"
-    (:container (css/get-classnames Root)) => "om-css_core-spec_Root__container"
-    "does not generate children-classnames"
-    (:items-wrapper (css/get-classnames Root)) => nil))
+    "Allows a component to specify a single rule"
+    (css/css-merge Child) => [[:.om-css_core-spec_Child__p {:font-weight 'bold}]]
+    "Allows a component to specify multiple rules"
+    (css/css-merge Child2) => [[:.om-css_core-spec_Child2__p {:font-weight 'bold}]
+                               [:.om-css_core-spec_Child2__p2 {:font-weight 'normal}]]
+    "Allows component combinations"
+    (css/css-merge Child Child2) => [[:.om-css_core-spec_Child__p {:font-weight 'bold}]
+                                     [:.om-css_core-spec_Child2__p {:font-weight 'bold}]
+                                     [:.om-css_core-spec_Child2__p2 {:font-weight 'normal}]]
+    "Merges rules in with component css"
+    (css/css-merge Child [:a {:x 1}] Child2) => [[:.om-css_core-spec_Child__p {:font-weight 'bold}]
+                                                 [:a {:x 1}]
+                                                 [:.om-css_core-spec_Child2__p {:font-weight 'bold}]
+                                                 [:.om-css_core-spec_Child2__p2 {:font-weight 'normal}]]))
+
+(defrecord X [])
+
+(defui Boo
+  static css/CSS
+  (css [this] [:a {:x 1}]))
+
+(specification "apply-css macro"
+  (assertions
+    "Converts :class entries to localized names for record types"
+    (localize-classnames X (pr-str [:a {:b [:c {:d #js {:class :a}}]}])) => #?(:cljs "[:a {:b [:c {:d #js {:className \"om-css_core-spec_X__a\"}}]}]"
+                                                                               :clj "[:a {:b [:c {:d {:className \"om-css_core-spec_X__a\"}}]}]")
+    "Converts :class entries to localized names for defui types"
+    (localize-classnames Boo (pr-str [:a {:b [:c {:d #js {:class :a}}]}])) => #?(:cljs "[:a {:b [:c {:d #js {:className \"om-css_core-spec_Boo__a\"}}]}]"
+                                                                                 :clj "[:a {:b [:c {:d {:className \"om-css_core-spec_Boo__a\"}}]}]")))
