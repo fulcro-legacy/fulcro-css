@@ -60,6 +60,13 @@
        :cljs (children component))
     []))
 
+(defn get-nested-children
+  [component]
+  (let [direct-children (get-children component)]
+    (if (empty? direct-children)
+      []
+      (concat direct-children (reduce #(concat %1 (get-nested-children %2)) [] direct-children)))))
+
 (defn localize-css
   [component]
   (sp/transform (sp/walker prefixed-keyword?)
@@ -67,12 +74,16 @@
                    (oc/local-kw component (keyword nm)))
                 (get-local-rules component)))
 
+(defn get-css-rules
+  [component]
+  (concat (localize-css component) (get-global-rules component)))
+
 (defn get-css
   [component]
-  (let [local-rules (localize-css component)
-        global-rules (get-global-rules component)
-        children-rules (reduce #(into %1 (get-css %2)) [] (get-children component))]
-    (concat local-rules global-rules children-rules)))
+  (let [own-rules (get-css-rules component)
+        nested-children (distinct (get-nested-children component))
+        nested-children-rules (reduce #(into %1 (get-css-rules %2)) [] nested-children)]
+    (concat own-rules nested-children-rules)))
 
 (defn get-classnames
   [comp]
