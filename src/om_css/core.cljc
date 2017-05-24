@@ -119,7 +119,7 @@
           (render [this] (localize-classnames ClassName (dom/div #js { :class [:p :$r] } ...)))
 
        will result in:
-  
+
           (render [this] (dom/div #js { :className \"namespace_ClassName_p r\"  } ...))
        "
    [class body]
