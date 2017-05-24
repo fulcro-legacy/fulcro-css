@@ -115,8 +115,11 @@
    "Localizes class names specified in DOM elements as keywords or vectors of keywords set in the :class property
        of their attributes map and outputs them as a proper :className string. Starting a keyword's name with `$` will
        prevent localization.
+
           (render [this] (localize-classnames ClassName (dom/div #js { :class [:p :$r] } ...)))
+
        will result in:
+  
           (render [this] (dom/div #js { :className \"namespace_ClassName_p r\"  } ...))
        "
    [class body]
