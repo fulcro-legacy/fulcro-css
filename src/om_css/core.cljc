@@ -51,16 +51,23 @@
 (defn css-merge
   "Merge together the CSS of components that implement the CSS interface and other literal CSS entries.
      This function can be used to simply chain together rules of Garden syntax:
+
      (css-merge [:c {:color :black}] [:d {:color :red}])
+
      which really just makes it a nested vector; however, you can intermix components that implement the CSS interface:
+
      (css-merge [:c {:color :black}] CSSComponent [:d {:color :red}])
+
      which themselves can have single rules, or vectors of rules:
+
      (defrecord MyCss []
        css/CSS
        (css [this] [ [:rule { ... }] [:rule2 { ... }] ]))
+
      (defui SomeUI
        static css/CSS
        (css [this] [ [:rule { ... }] [:rule2 { ... }] ]))
+
      (defui Root
        static css/CSS
        (css [this] (css-merge SomeUI MyCss))
