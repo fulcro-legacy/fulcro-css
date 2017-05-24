@@ -48,9 +48,7 @@
 
 (specification "Obtain CSS from classes"
   (behavior "can be obtained from"
-            (assertions
-             "global rules"
-             (css/get-global-rules X)=> [[:.a {:color "blue"}]]
+    (assertions
      "a single component"
      (css/get-css ListItem) => '([:.om-css_css-spec_ListItem__item {:font-weight "bold"}])
      "a component with a child"
