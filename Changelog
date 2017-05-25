@@ -1,3 +1,7 @@
+1.0.2
+-----
+- Fixed classname generation in advanced compilation
+
 1.0.1
 -----
 - Improvements to support server-side rendering
