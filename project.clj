@@ -1,4 +1,4 @@
-(defproject untangled/om-css "1.0.2-SNAPSHOT"
+(defproject untangled/om-css "1.0.2"
   :description "A composable library for co-located CSS on Om/Untangled UI components"
   :url ""
   :license {:name "MIT"
