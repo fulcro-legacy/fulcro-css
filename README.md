@@ -10,13 +10,11 @@ component CSS.
 
 ## Usage
 
-First, co-locate your rules on the components, and use the localized class
-names in your rendering. The primary tools for this are [garden](https://github.com/noprompt/garden) syntax,
-`css/local-kw` to generate localized classname keywords for [garden](https://github.com/noprompt/garden),
-`css/local-class` to generate localized classname strings for use in
-the `:className` attribute of DOM elements, and `localize-classnames`
-which is a macro that will rewrite a render body from simple a `:class`
-attribute to the proper `:className` attribute.
+First, co-locate your rules on the components, and use the localized classnames
+in your rendering. The primary tools for this are [garden](https://github.com/noprompt/garden) syntax,
+the `css/localCSS` protocol for automatically generating localized classname keywords for 
+[garden](https://github.com/noprompt/garden) and `css/get-classnames` to generate localized classname strings
+for use in the `:className` attribute of DOM elements.
 
 **IMPORTANT NOTE:** The composition rules for CSS are just like Om queries and
 Untangled initial app state: it has to all compose to some root, and you obtain
@@ -29,29 +27,27 @@ don't use it, you don't end up emitting it!
 ```clj
 (ns my-ns
   (:require 
-     [om-css.core :as css :refer-macros [localize-classnames]]
+     [om-css.core :as css]
      [om.next :as om :refer-macros [defui]]))
   
 (defui Component
-  static css/CSS
-  (css [this] [ [(css/local-kw Component :class1) {:color 'blue}] 
-                [(css/local-kw Component :class2) {:color 'blue}] ])
+  static css/localCSS
+  (local-css [this] [ [:.class1 {:color 'orange}] 
+                      [:.class2 {:color 'yellow}] ])
+  static css/globalCSS    ; Use the globalCSS protocol to prevent keywords from being localized.
+  (global-css [this] [ [:class3 {:color 'purple}] ])
   Object
   (render [this]
-    ; can use a macro to rewrite classnames. $ is used to prevent localization. Note the use of :class instead of :className
+    (let [{:keys [class1 class2 class3] (css/get-classnames Component)}])
     (localize-classnames Component
-       (dom/div #js {:class [:class1 :class2 :$root-class]} ...))))
+       (dom/div #js {:className (str class1 " " class2 " " class3)} ...))))
        
 (defui Component2
-  static css/CSS
+  static css/localCSS
+  (local-css [this] [ [:.class4 {:color 'blue}] ])
+  static css/childrenCSS
   ; CSS rules can be composed from children and additional garden rules:
-  (css [this] (css/css-merge 
-                 Component 
-                 [(css/local-kw Component2 :class) {:color 'red}]))
-  Object
-  (render [this]
-    ; there is a helper function if you just want to get the munged classname
-    (dom/div #js {:className (css/local-class Component2 :class) } ...)))
+  (children-css [this] [Component]))
 ```
 
 ### Emitting your styles to the page
@@ -60,7 +56,7 @@ There are two methods for putting your co-located styles into your
 application:
 
 - Emit a `dom/style` element in your Root UI component. For example:
-  `(dom/style nil (garden.core/css (om-css.core/css Root)))`. The problem with this
+  `(dom/style nil (garden.core/css (om-css.core/get-css Root)))`. The problem with this
   approach is that your root element itself will not see all of the CSS, since the style is embedded within it.
 - Force a style element out to the DOM document. There is a helper function `om-css.core/upsert-css` that can
   be called somewhere in your application initialization. It will extract the CSS and put it in a style element. If that 
