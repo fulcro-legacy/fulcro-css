@@ -4,6 +4,7 @@
   (:require
     untangled-spec.reporters.impl.suite
     om-css.core-spec
+    om-css.css-spec
     [devtools.core :as devtools]))
 
 (enable-console-print!)
