@@ -4,6 +4,7 @@
             [com.rpl.specter :as sp]
             [om.next :as om]
             [garden.core :as g]
+            [garden.selectors :as gs]
             [cljs.core]
             [om-css.core :as oc]))
 
@@ -48,14 +49,32 @@
        :cljs (local-rules component))
     []))
 
+(defn- prefixed-name?
+  "Returns true if the given string starts with one of [. $ &$ &.]"
+  [nm]
+  (some? (re-matches #"(\.|\$|&\.|&\$).*" nm)))
+
+(defn- get-prefix
+  "Returns the prefix of a string. [. $ &$ &.]"
+  [nm]
+  (let [[_ prefix] (re-matches #"(\.|\$|&\.|&\$).*" nm)]
+    prefix))
+
 (defn- prefixed-keyword?
+  "Returns true if the given keyword starts with one of [. $ &$ &.]"
   [kw]
   (and (keyword? kw)
-       (str/starts-with? (name kw) ".")))
+       (prefixed-name? (name kw))))
 
 (defn- remove-prefix
+  "Removes the prefix of a string."
+  [nm]
+  (subs nm (count (get-prefix nm))))
+
+(defn- remove-prefix-kw
+  "Removes the prefix of a keyword."
   [kw]
-  (keyword (subs (name kw) 1)))
+  (keyword (remove-prefix (name kw))))
 
 (defn get-includes
   "Returns the list of components from the include-children method of a component"
@@ -73,18 +92,55 @@
       []
       (concat direct-children (reduce #(concat %1 (get-nested-includes %2)) [] direct-children)))))
 
-(defn- localize-css
-  "Converts the simples names specified by the component into localized css names."
+(defn- localize-name
+  [nm comp]
+  (let [no-prefix (remove-prefix nm)
+        prefix (get-prefix nm)]
+    (case prefix
+      ("." "&.") (str prefix (oc/local-class comp (keyword no-prefix)))
+      "$" (str "." no-prefix)
+      "&$" (str "&." no-prefix))))
+
+(defn- localize-kw
+  [kw comp]
+  (keyword (localize-name (name kw) comp)))
+
+(defn- local-class
+  "Gives the localized classname for the given keyword."
+  [comp kw]
+  (let [nm (name kw)
+        prefix (get-prefix nm)
+        no-prefix (subs nm (count prefix))]
+    (case prefix
+      ("$" "&$") no-prefix
+      ("." "&.") (oc/local-class comp no-prefix))))
+
+(defn- selector?
+  [x]
+  (= garden.selectors.CSSSelector (type x)))
+
+(defn localize-selector
+  [selector comp]
+  (let [val (:selector selector)
+        split-cns-selectors (str/split val #" ")]
+    (gs/selector (str/join " " (map #(if (prefixed-name? %)
+                                  (localize-name % comp)
+                                  %)
+                               split-cns-selectors)))))
+
+(defn localize-css
+  "Converts prefixed keywords into localized keywords and localizes the values of garden selectors"
   [component]
-  (sp/transform (sp/walker prefixed-keyword?)
-                #(let [nm (subs (name %) 1)]
-                   (oc/local-kw component (keyword nm)))
+  (sp/transform (sp/walker #(or (prefixed-keyword? %)
+                                (selector? %)))
+                #(if (prefixed-keyword? %) (localize-kw % component) (localize-selector % component))
                 (get-local-rules component)))
 
 (defn- get-css-rules
   "Gets the local and global rules from the given component."
   [component]
-  (concat (localize-css component) (get-global-rules component)))
+  (concat (localize-css component)
+          (get-global-rules component)))
 
 (defn get-css
   "Recursively gets all global and localized rules (in garden notation) starting at the given component."
@@ -94,13 +150,29 @@
         nested-children-rules (reduce #(into %1 (get-css-rules %2)) [] nested-children)]
     (concat own-rules nested-children-rules)))
 
+(defn- get-selector-keywords
+  "Gets all the keywords that are present in a selector"
+  [selector]
+  (let [val (:selector selector)
+        classnames (filter #(re-matches #"[.$].*" %) (str/split val #" "))]
+    (map keyword classnames)))
+
+(defn- get-class-keys
+  "Gets all used classnames in from the given rules as keywords"
+  [rules]
+  (let [flattened-rules (flatten rules)
+        selectors (filter selector? flattened-rules)
+        prefixed-kws (filter prefixed-keyword? flattened-rules)]
+    (distinct (concat (flatten (map get-selector-keywords selectors)) prefixed-kws))))
+
+
 (defn get-classnames
   "Returns a map from user-given CSS rule names to om-css localized names of the given component."
   [comp]
-  (let [local-kws (mapv remove-prefix (filter prefixed-keyword? (flatten (get-local-rules comp))))
-        global-kws (mapv remove-prefix (filter prefixed-keyword? (flatten (get-global-rules comp))))
-        local-classnames (zipmap local-kws (map #(oc/local-class comp %) local-kws))
-        global-classnames (zipmap global-kws (map name global-kws))]
+  (let [local-class-keys (get-class-keys (get-local-rules comp))
+        global-class-keys (map remove-prefix-kw (get-class-keys (get-global-rules comp)))
+        local-classnames (zipmap (map remove-prefix-kw local-class-keys) (map #(local-class comp %) local-class-keys))
+        global-classnames (zipmap global-class-keys (map name global-class-keys))]
     (merge local-classnames global-classnames)))
 
 #?(:cljs

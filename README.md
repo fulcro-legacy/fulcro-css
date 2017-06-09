@@ -70,7 +70,7 @@ CSS can be co-located on any Om `defui` component. This CSS does *not* take effe
  
 1. Add localized rules to your component via the `om-css.css/CSS` protocol `local-rules` method which returns 
  a vector in Garden notation. Any rules included here will be automatically prefixed with the CSSified namespace 
- and component name to ensure name collisions are impossible.
+ and component name to ensure name collisions are impossible. To prevent this localization you can prefix a rule with a `$`  character (`:$container`) instead of a `.` (`:.container`), these rules will *not* be namespaced.
 2. Add the `include-children` protocol method. This method MUST return a vector (which can be empty). It should
 include the Om component names for any components that are used within the `render` that also supply CSS. This
 allows the library to compose together your CSS according to what components you *use*.
@@ -115,6 +115,18 @@ with a DOM for the UI of:
     </ul>
   </div>
 </div>
+```
+
+``Garden's selectors`` are supported. These include the *CSS combinators* and the special `&` selector. Using the `$`-prefix will also prevent the selectors from being localized.
+
+```clj
+  (local-rules [this] [[(garden.selectors/> :.a :$b) {:color "blue"}]])
+```
+
+```html
+.namespace_Component__a > .b {
+  color: blue;
+}
 ```
 
 # OLD SUPPORT (versions 1.0.2 and below)

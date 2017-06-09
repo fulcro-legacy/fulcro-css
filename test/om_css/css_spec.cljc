@@ -3,7 +3,8 @@
                :clj [untangled-spec.core :refer [specification assertions behavior]])
                     [om-css.css :as css]
                     [om.next :as om :refer [defui]]
-                    [om.dom :as dom]))
+                    [om.dom :as dom]
+                    [garden.selectors :as sel]))
 
 (defui ListItem
   static css/CSS
@@ -124,3 +125,82 @@
     (:container (css/get-classnames Root)) => "om-css_css-spec_Root__container"
     "does not generate children-classnames"
     (:items-wrapper (css/get-classnames Root)) => nil))
+
+(defui A
+  static css/CSS
+  (local-rules [this] [[(sel/> :.a :.b :.c) {:color "blue"}]])
+  (include-children [this] []))
+
+(defui B
+  static css/CSS
+  (local-rules [this] [[(sel/> :$a :.b :span :$c) {:color "red"}]])
+  (include-children [this] []))
+
+(defui C
+  static css/CSS
+  (local-rules [this] [[(sel/+ :.a :$b) {:color "green"}]])
+  (include-children [this] []))
+
+(defui D
+  static css/CSS
+  (local-rules [this] [[(sel/- :.a :.b) {:color "yellow"}]])
+  (include-children [this] []))
+
+(defui E
+  static css/CSS
+  (local-rules [this] [[(sel/+ :.a (sel/> :$b :span)) {:color "brown"}]])
+  (include-children [this] []))
+
+(defui F
+  static css/CSS
+  (local-rules [this] [[(sel/+ :.a (sel/> :$b :span)) {:color "brown"}]])
+  (include-children [this] [])
+  static css/Global
+  (global-rules [this] [[(sel/> :.c :.d) {:color "blue"}]]))
+
+(specification "CSS Combinators"
+  (assertions
+      "Child selector"
+    (css/get-css A) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_A__a > .om-css_css-spec_A__b > .om-css_css-spec_A__c"} {:color "blue"}])
+    "Child selector with localization prevention"
+    (css/get-css B) => '([#garden.selectors.CSSSelector{:selector ".a > .om-css_css-spec_B__b > span > .c"} {:color "red"}])
+    "Adjacent sibling selector"
+    (css/get-css C) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_C__a + .b"} {:color "green"}])
+    "General sibling selector"
+    (css/get-css D) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_D__a ~ .om-css_css-spec_D__b"} {:color "yellow"}])
+    "Multiple different selectors"
+    (css/get-css E) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_E__a + .b > span"} {:color "brown"}])
+    "Get classnames"
+    (css/get-classnames F) => {:a "om-css_css-spec_F__a"
+                               :b "b"
+                               :c "c"
+                               :d "d"}))
+
+(defui G
+  static css/CSS
+  (local-rules [this] [[:.a {:color "orange"}
+                        [:&.b {:font-weight "bold"}]
+                        [:&$c {:background-color "black"}]]])
+  (include-children [this] [])
+  static css/Global
+  (global-rules [this] [[:.d {:color "green"}
+                         [:&.e {:color "gray"}]]]))
+
+(specification "Special &-selector"
+  (assertions
+      "Get CSS rules"
+    (css/get-css G) => '([:.om-css_css-spec_G__a {:color "orange"}
+                         [:&.om-css_css-spec_G__b {:font-weight "bold"}]
+                         [:&.c {:background-color "black"}]]
+                        [:.d {:color "green"}
+                         [:&.e {:color "gray"}]])
+    "Get classnames"
+    (css/get-classnames G) => {:a "om-css_css-spec_G__a"
+                               :b "om-css_css-spec_G__b"
+                               :c "c"
+                               :d "d"
+                               :e "e"}))
+
+
+
+
