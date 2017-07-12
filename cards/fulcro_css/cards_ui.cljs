@@ -1,8 +1,8 @@
-(ns om-css.cards-ui
+(ns fulcro-css.cards-ui
   (:require-macros
     [devcards.core :refer [defcard-om-next]])
   (:require [om.dom :as dom]
-            [om-css.css :as css]
+            [fulcro-css.css :as css]
             [om.next :as om :refer [defui]]))
 
 (defui ListItem

@@ -1,10 +1,10 @@
-(ns om-css.suite
+(ns fulcro-css.suite
   (:require-macros
-    [untangled-spec.reporters.suite :as ts])
+    [fulcro-spec.reporters.suite :as ts])
   (:require
-    untangled-spec.reporters.impl.suite
-    om-css.core-spec
-    om-css.css-spec
+    fulcro-spec.reporters.impl.suite
+    fulcro-css.core-spec
+    fulcro-css.css-spec
     [devtools.core :as devtools]))
 
 (enable-console-print!)

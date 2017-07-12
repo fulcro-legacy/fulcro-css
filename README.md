@@ -1,11 +1,11 @@
-# Om-CSS A library to help generate co-located CSS on Om and Untangled components.
+# Om-CSS A library to help generate co-located CSS on Om and Fulcro components.
 
 This library provides some utility functions that help you use 
 [garden](https://github.com/noprompt/garden) for co-located, localized
 component CSS. 
 
-<a href="https://clojars.org/untangled/om-css">
-<img src="https://clojars.org/untangled/om-css/latest-version.svg">
+<a href="https://clojars.org/fulcrologic/fulcro-css">
+<img src="https://clojars.org/fulcrologic/fulcro-css/latest-version.svg">
 </a>
 
 ## Usage (version 1.1.0 and above)
@@ -15,9 +15,9 @@ This library requires `[org.omcljs/om "1.0.0-beta1"]` or above.
 A typical file will have the following shape:
 
 ```clj
-(ns om-css.css-spec
+(ns fulcro-css.css-spec
   (:require [om.dom :as dom]
-            [om-css.css :as css]
+            [fulcro-css.css :as css]
             [om.next :as om :refer [defui]]))
 
 (defui ListItem
@@ -68,24 +68,24 @@ A typical file will have the following shape:
 CSS can be co-located on any Om `defui` component. This CSS does *not* take effect until it is embedded on the page 
 (see Embedding The CSS below). There are five things to do:
  
-1. Add localized rules to your component via the `om-css.css/CSS` protocol `local-rules` method which returns 
+1. Add localized rules to your component via the `fulcro-css.css/CSS` protocol `local-rules` method which returns 
  a vector in Garden notation. Any rules included here will be automatically prefixed with the CSSified namespace 
  and component name to ensure name collisions are impossible. To prevent this localization you can prefix a rule with a `$`  character (`:$container`) instead of a `.` (`:.container`), these rules will *not* be namespaced.
 2. Add the `include-children` protocol method. This method MUST return a vector (which can be empty). It should
 include the Om component names for any components that are used within the `render` that also supply CSS. This
 allows the library to compose together your CSS according to what components you *use*.
-3. (optional) Add the `om-css.css/Global` protocol to emit garden rules that will *not* be namespaced. This, any
+3. (optional) Add the `fulcro-css.css/Global` protocol to emit garden rules that will *not* be namespaced. This, any
 rule emitted from here will be exactly the name you use.
-4. Use the `om-css.css/get-classnames` function to get a map keyed by the simple name you used in your garden rules. 
+4. Use the `fulcro-css.css/get-classnames` function to get a map keyed by the simple name you used in your garden rules. 
  The values of the return map are the localized names. This allows you to use the more complex classnames without having to know what
 they actually are.
-5. Use the `om-css.css/upsert-css` function to embed the CSS.
+5. Use the `fulcro-css.css/upsert-css` function to embed the CSS.
 
 In the above example, the upsert results in this CSS on the page:
 
 ```html
 <style id="my-css">
-.om-css_cards-ui_Root__container {
+.fulcro-css_cards-ui_Root__container {
   background-color: red;
 }
 
@@ -93,11 +93,11 @@ In the above example, the upsert results in this CSS on the page:
   color: yellow;
 }
 
-.om-css_cards-ui_ListComponent__items-wrapper {
+.fulcro-css_cards-ui_ListComponent__items-wrapper {
   background-color: blue;
 }
 
-.om-css_cards-ui_ListItem__item {
+.fulcro-css_cards-ui_ListItem__item {
   font-weight: bold;
 }
 </style>
@@ -107,11 +107,11 @@ with a DOM for the UI of:
 
 ```html
 <div class="text">
-  <div class="om-css_cards-ui_ListComponent__items-wrapper">
+  <div class="fulcro-css_cards-ui_ListComponent__items-wrapper">
     <h2>List 1</h2>
     <ul>
-      <li class="om-css_cards-ui_ListItem__item">A</li>
-      <li class="om-css_cards-ui_ListItem__item">B</li>
+      <li class="fulcro-css_cards-ui_ListItem__item">A</li>
+      <li class="fulcro-css_cards-ui_ListItem__item">B</li>
     </ul>
   </div>
 </div>
@@ -132,7 +132,7 @@ with a DOM for the UI of:
 # OLD SUPPORT (versions 1.0.2 and below)
 
 The following documentation covers the `core` namespace, which is unchanged from version 1.0.2. This is here so legacy
-users can continue to use the original APIs without hassle, and choose when to port to the new `om-css/css` namespace's
+users can continue to use the original APIs without hassle, and choose when to port to the new `fulcro-css/css` namespace's
 API. **New applications should not use the following API.**
 
 ## Usage (DEPRECATED)
@@ -146,7 +146,7 @@ which is a macro that will rewrite a render body from simple a `:class`
 attribute to the proper `:className` attribute.
 
 **IMPORTANT NOTE:** The composition rules for CSS are just like Om queries and
-Untangled initial app state: it has to all compose to some root, and you obtain
+Fulcro initial app state: it has to all compose to some root, and you obtain
 the total result from that root. The obvious disadvantage is that if you forget
 to compose it, it won't appear. However, it has the distinct advantage: if you
 don't use it, you don't end up emitting it!
@@ -156,7 +156,7 @@ don't use it, you don't end up emitting it!
 ```clj
 (ns my-ns
   (:require 
-     [om-css.core :as css :refer-macros [localize-classnames]]
+     [fulcro-css.core :as css :refer-macros [localize-classnames]]
      [om.next :as om :refer-macros [defui]]))
   
 (defui Component
@@ -187,9 +187,9 @@ There are two methods for putting your co-located styles into your
 application:
 
 - Emit a `dom/style` element in your Root UI component. For example:
-  `(dom/style nil (garden.core/css (om-css.core/css Root)))`. The problem with this
+  `(dom/style nil (garden.core/css (fulcro-css.core/css Root)))`. The problem with this
   approach is that your root element itself will not see all of the CSS, since the style is embedded within it.
-- Force a style element out to the DOM document. There is a helper function `om-css.core/upsert-css` that can
+- Force a style element out to the DOM document. There is a helper function `fulcro-css.core/upsert-css` that can
   be called somewhere in your application initialization. It will extract the CSS and put it in a style element. If that 
   style element already exists then it will replace it, meaning that you can use it in the namespace that figwheel always
   reloads as a way to refresh the CSS during development.

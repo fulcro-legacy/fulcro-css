@@ -1,5 +1,5 @@
-(defproject untangled/om-css "1.1.0"
-  :description "A composable library for co-located CSS on Om/Untangled UI components"
+(defproject fulcrologic/fulcro-css "1.1.0"
+  :description "A composable library for co-located CSS on Om/Fulcro UI components"
   :url ""
   :license {:name "MIT"
             :url  "https://opensource.org/licenses/MIT"}
@@ -9,12 +9,12 @@
                  [org.omcljs/om "1.0.0-beta1" :scope "provided"]
                  [garden "1.3.2"]
                  [com.rpl/specter "0.13.0"]
-                 [navis/untangled-spec "0.3.9" :scope "test"]]
+                 [fulcrologic/fulcro-spec "1.0.0-beta2" :scope "test"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]
             [com.jakemccrary/lein-test-refresh "0.19.0"]]
 
-  :test-refresh {:report untangled-spec.reporters.terminal/untangled-report}
+  :test-refresh {:report fulcro-spec.reporters.terminal/fulcro-report}
 
   :source-paths ["src"]
   :resource-paths []
@@ -23,14 +23,14 @@
   :cljsbuild {:builds [{:id           "test"
                         :source-paths ["src" "test"]
                         :figwheel     true
-                        :compiler     {:main       om-css.suite
+                        :compiler     {:main       fulcro-css.suite
                                        :output-to  "resources/public/js/specs.js"
                                        :output-dir "resources/public/js/specs"
                                        :asset-path "js/specs"}}
                        {:id           "cards"
                         :source-paths ["src" "cards"]
                         :figwheel     {:devcards true}
-                        :compiler     {:main       om-css.cards-ui
+                        :compiler     {:main       fulcro-css.cards-ui
                                        :output-to  "resources/public/js/cards.js"
                                        :output-dir "resources/public/js/cards"
                                        :asset-path "js/cards"}}]}

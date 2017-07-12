@@ -1,5 +1,5 @@
-(ns om-css.core
-  #?(:cljs (:require-macros om-css.core))
+(ns fulcro-css.core
+  #?(:cljs (:require-macros fulcro-css.core))
   (:require [cljs.tagged-literals]
             [clojure.string :as str]
             [com.rpl.specter :as sp]
@@ -134,7 +134,7 @@
                                   (let [cn (name c)]
                                     (if (str/starts-with? cn "$")
                                       (str/replace cn #"^[$]" "")
-                                      `(om-css.core/local-class ~class ~cn))))
+                                      `(fulcro-css.core/local-class ~class ~cn))))
                      subclasses (if (vector? subclass)
                                   (apply list (reduce (fn [acc c] (conj acc (entry c) " ")) ['str] subclass))
                                   (entry subclass))]
