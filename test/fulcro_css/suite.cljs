@@ -1,7 +1,6 @@
 (ns fulcro-css.suite
   (:require
-    fulcro-css.core-spec
-    fulcro-css.css-spec
+    fulcro-css.tests-to-run
     [fulcro-spec.selectors :as sel]
     [fulcro-spec.suite :as suite]))
 
