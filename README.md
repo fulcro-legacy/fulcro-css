@@ -1,4 +1,4 @@
-# Om-CSS A library to help generate co-located CSS on Om and Fulcro components.
+# A library to co-locate CSS on Om and Fulcro components.
 
 This library provides some utility functions that help you use 
 [garden](https://github.com/noprompt/garden) for co-located, localized
