@@ -1,4 +1,4 @@
-(ns om-css.css
+(ns fulcro-css.css
   (:require [cljs.tagged-literals]
             [clojure.string :as str]
             [com.rpl.specter :as sp]
@@ -6,7 +6,7 @@
             [garden.core :as g]
             [garden.selectors :as gs]
             [cljs.core]
-            [om-css.core :as oc]))
+            [fulcro-css.core :as oc]))
 
 (defprotocol CSS
   (local-rules [this] "Specifies the component's local CSS rules")
@@ -167,7 +167,7 @@
 
 
 (defn get-classnames
-  "Returns a map from user-given CSS rule names to om-css localized names of the given component."
+  "Returns a map from user-given CSS rule names to fulcro-css localized names of the given component."
   [comp]
   (let [local-class-keys (get-class-keys (get-local-rules comp))
         global-class-keys (map remove-prefix-kw (get-class-keys (get-global-rules comp)))

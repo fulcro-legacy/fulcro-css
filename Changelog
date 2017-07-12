@@ -1,3 +1,7 @@
+1.1.1
+-----
+- Renamed project
+
 1.1.0
 -----
 - Deprecated existing core namespace in favor of the css namespace

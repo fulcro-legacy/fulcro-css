@@ -1,7 +1,7 @@
-(ns om-css.css-spec
-  (:require #?(:cljs [untangled-spec.core :refer-macros [specification assertions behavior]]
-               :clj [untangled-spec.core :refer [specification assertions behavior]])
-                    [om-css.css :as css]
+(ns fulcro-css.css-spec
+  (:require #?(:cljs [fulcro-spec.core :refer-macros [specification assertions behavior]]
+               :clj [fulcro-spec.core :refer [specification assertions behavior]])
+                    [fulcro-css.css :as css]
                     [om.next :as om :refer [defui]]
                     [om.dom :as dom]
                     [garden.selectors :as sel]))
@@ -99,30 +99,30 @@
   (behavior "can be obtained from"
     (assertions
       "a single component"
-      (css/get-css ListItem) => '([:.om-css_css-spec_ListItem__item {:font-weight "bold"}])
+      (css/get-css ListItem) => '([:.fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
       "a component with a child"
-      (css/get-css ListComponent) => '([:.om-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
-                                        [:.om-css_css-spec_ListItem__item {:font-weight "bold"}])
+      (css/get-css ListComponent) => '([:.fulcro-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
+                                        [:.fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
       "a component with nested children"
-      (css/get-css Root) => '([:.om-css_css-spec_Root__container {:background-color "red"}]
+      (css/get-css Root) => '([:.fulcro-css_css-spec_Root__container {:background-color "red"}]
                                [:.text {:color "green"}]
-                               [:.om-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
-                               [:.om-css_css-spec_ListItem__item {:font-weight "bold"}])
+                               [:.fulcro-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
+                               [:.fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
       "a component with multiple direct children"
-      (css/get-css Parent) => '([:.om-css_css-spec_Child1__child1class {:color "red"}]
-                                 [:.om-css_css-spec_Child2__child2class {:color "blue"}])
+      (css/get-css Parent) => '([:.fulcro-css_css-spec_Child1__child1class {:color "red"}]
+                                 [:.fulcro-css_css-spec_Child2__child2class {:color "blue"}])
       "a component with multiple direct children without duplicating rules"
-      (css/get-css MyRoot) => '([:.om-css_css-spec_MyForm__form {:background-color "white"}]
-                                 [:.om-css_css-spec_MyNavigation__nav {:width "100px"}]
-                                 [:.om-css_css-spec_MyButton__my-button {:color "black"}]
-                                 [:.om-css_css-spec_MyLabel__my-label {:color "green"}]))))
+      (css/get-css MyRoot) => '([:.fulcro-css_css-spec_MyForm__form {:background-color "white"}]
+                                 [:.fulcro-css_css-spec_MyNavigation__nav {:width "100px"}]
+                                 [:.fulcro-css_css-spec_MyButton__my-button {:color "black"}]
+                                 [:.fulcro-css_css-spec_MyLabel__my-label {:color "green"}]))))
 
 (specification "Generate classnames from CSS"
   (assertions
     "global classnames are untouched"
     (:text (css/get-classnames Root)) => "text"
     "local classnames are transformed"
-    (:container (css/get-classnames Root)) => "om-css_css-spec_Root__container"
+    (:container (css/get-classnames Root)) => "fulcro-css_css-spec_Root__container"
     "does not generate children-classnames"
     (:items-wrapper (css/get-classnames Root)) => nil))
 
@@ -161,17 +161,17 @@
 (specification "CSS Combinators"
   (assertions
       "Child selector"
-    (css/get-css A) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_A__a > .om-css_css-spec_A__b > .om-css_css-spec_A__c"} {:color "blue"}])
+    (css/get-css A) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_A__a > .fulcro-css_css-spec_A__b > .fulcro-css_css-spec_A__c"} {:color "blue"}])
     "Child selector with localization prevention"
-    (css/get-css B) => '([#garden.selectors.CSSSelector{:selector ".a > .om-css_css-spec_B__b > span > .c"} {:color "red"}])
+    (css/get-css B) => '([#garden.selectors.CSSSelector{:selector ".a > .fulcro-css_css-spec_B__b > span > .c"} {:color "red"}])
     "Adjacent sibling selector"
-    (css/get-css C) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_C__a + .b"} {:color "green"}])
+    (css/get-css C) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_C__a + .b"} {:color "green"}])
     "General sibling selector"
-    (css/get-css D) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_D__a ~ .om-css_css-spec_D__b"} {:color "yellow"}])
+    (css/get-css D) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_D__a ~ .fulcro-css_css-spec_D__b"} {:color "yellow"}])
     "Multiple different selectors"
-    (css/get-css E) => '([#garden.selectors.CSSSelector{:selector ".om-css_css-spec_E__a + .b > span"} {:color "brown"}])
+    (css/get-css E) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_E__a + .b > span"} {:color "brown"}])
     "Get classnames"
-    (css/get-classnames F) => {:a "om-css_css-spec_F__a"
+    (css/get-classnames F) => {:a "fulcro-css_css-spec_F__a"
                                :b "b"
                                :c "c"
                                :d "d"}))
@@ -189,14 +189,14 @@
 (specification "Special &-selector"
   (assertions
       "Get CSS rules"
-    (css/get-css G) => '([:.om-css_css-spec_G__a {:color "orange"}
-                         [:&.om-css_css-spec_G__b {:font-weight "bold"}]
+    (css/get-css G) => '([:.fulcro-css_css-spec_G__a {:color "orange"}
+                         [:&.fulcro-css_css-spec_G__b {:font-weight "bold"}]
                          [:&.c {:background-color "black"}]]
                         [:.d {:color "green"}
                          [:&.e {:color "gray"}]])
     "Get classnames"
-    (css/get-classnames G) => {:a "om-css_css-spec_G__a"
-                               :b "om-css_css-spec_G__b"
+    (css/get-classnames G) => {:a "fulcro-css_css-spec_G__a"
+                               :b "fulcro-css_css-spec_G__b"
                                :c "c"
                                :d "d"
                                :e "e"}))
