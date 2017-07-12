@@ -1,18 +1,13 @@
 (ns fulcro-css.suite
-  (:require-macros
-    [fulcro-spec.reporters.suite :as ts])
   (:require
-    fulcro-spec.reporters.impl.suite
     fulcro-css.core-spec
     fulcro-css.css-spec
-    [devtools.core :as devtools]))
+    [fulcro-spec.selectors :as sel]
+    [fulcro-spec.suite :as suite]))
 
 (enable-console-print!)
 
-(devtools/enable-feature! :sanity-hints)
-(devtools/install!)
-
-(ts/deftest-all-suite app-specs #".*-spec")
-
-(app-specs)
+(suite/def-test-suite on-load {:ns-regex #"fulcro.css.*-spec"}
+  {:default   #{::sel/none :focused}
+   :available #{:focused}})
 
