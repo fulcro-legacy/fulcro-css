@@ -8,6 +8,9 @@ component CSS.
 <img src="https://clojars.org/fulcrologic/fulcro-css/latest-version.svg">
 </a>
 
+Release: image:https://api.travis-ci.org/fulcrologic/fulcro-css.svg?branch=master[link=https://github.com/fulcrologic/fulcro-css/tree/master]
+Snapshot: image:https://api.travis-ci.org/fulcrologic/fulcro-css.svg?branch=develop[link=https://github.com/fulcrologic/fulcro-css/tree/develop]
+
 ## Usage
 
 This library requires `[org.omcljs/om "1.0.0-beta1"]` or above.
