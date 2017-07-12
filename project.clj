@@ -1,32 +1,46 @@
-(defproject fulcrologic/fulcro-css "1.1.0"
+(defproject fulcrologic/fulcro-css "1.0.0"
   :description "A composable library for co-located CSS on Om/Fulcro UI components"
   :url ""
   :license {:name "MIT"
             :url  "https://opensource.org/licenses/MIT"}
 
-  :dependencies [[org.clojure/clojure "1.9.0-alpha14" :scope "provided"]
-                 [org.clojure/clojurescript "1.9.494" :scope "provided"]
+  :dependencies [[org.clojure/clojure "1.9.0-alpha17" :scope "provided"]
+                 [org.clojure/clojurescript "1.9.671" :scope "provided"]
                  [org.omcljs/om "1.0.0-beta1" :scope "provided"]
+                 [lein-doo "0.1.7" :scope "test"]
+                 [fulcrologic/fulcro "1.0.0-beta2" :scope "test"]
                  [garden "1.3.2"]
-                 [com.rpl/specter "0.13.0"]
+                 [com.rpl/specter "1.0.2"]
                  [fulcrologic/fulcro-spec "1.0.0-beta2" :scope "test"]]
 
-  :plugins [[lein-cljsbuild "1.1.5"]
-            [com.jakemccrary/lein-test-refresh "0.19.0"]]
+  :plugins [[lein-cljsbuild "1.1.6"]
+            [lein-doo "0.1.7"]
+            [com.jakemccrary/lein-test-refresh "0.19.0" :exclusions [org.clojure/tools.namespace]]]
 
   :test-refresh {:report fulcro-spec.reporters.terminal/fulcro-report}
 
   :source-paths ["src"]
+  :test-paths ["test"]
   :resource-paths []
   :clean-targets ^{:protect false} ["resources/public/js" "target"]
 
+  :doo {:build "automated-tests"
+        :paths {:karma "node_modules/karma/bin/karma"}}
+
   :cljsbuild {:builds [{:id           "test"
                         :source-paths ["src" "test"]
-                        :figwheel     true
+                        :figwheel     {:on-jsload fulcro-css.suite/on-load}
                         :compiler     {:main       fulcro-css.suite
                                        :output-to  "resources/public/js/specs.js"
                                        :output-dir "resources/public/js/specs"
                                        :asset-path "js/specs"}}
+                       {:id           "automated-tests"
+                        :source-paths ["src" "test"]
+                        :compiler     {:main       fulcro-css.automated-test-main
+                                       :output-to  "resources/public/js/unit-tests.js"
+                                       :output-dir "resources/public/js/unit-tests"
+                                       :optimizations :none
+                                       :asset-path "js/unit-tests"}}
                        {:id           "cards"
                         :source-paths ["src" "cards"]
                         :figwheel     {:devcards true}

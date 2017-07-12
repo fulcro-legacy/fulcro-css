@@ -5,3 +5,5 @@ resources/public/js
 *.iml
 *.log
 pom.xml*
+node_modules
+package-lock.json

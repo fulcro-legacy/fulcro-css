@@ -158,18 +158,21 @@
   static css/Global
   (global-rules [this] [[(sel/> :.c :.d) {:color "blue"}]]))
 
+(defn- first-css-selector [css-rules]
+  (garden.selectors/css-selector (ffirst css-rules)))
+
 (specification "CSS Combinators"
   (assertions
-      "Child selector"
-    (css/get-css A) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_A__a > .fulcro-css_css-spec_A__b > .fulcro-css_css-spec_A__c"} {:color "blue"}])
+    "Child selector"
+    (first-css-selector (css/get-css A)) => ".fulcro-css_css-spec_A__a > .fulcro-css_css-spec_A__b > .fulcro-css_css-spec_A__c"
     "Child selector with localization prevention"
-    (css/get-css B) => '([#garden.selectors.CSSSelector{:selector ".a > .fulcro-css_css-spec_B__b > span > .c"} {:color "red"}])
+    (first-css-selector (css/get-css B)) => ".a > .fulcro-css_css-spec_B__b > span > .c"
     "Adjacent sibling selector"
-    (css/get-css C) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_C__a + .b"} {:color "green"}])
+    (first-css-selector (css/get-css C)) => ".fulcro-css_css-spec_C__a + .b"
     "General sibling selector"
-    (css/get-css D) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_D__a ~ .fulcro-css_css-spec_D__b"} {:color "yellow"}])
+    (first-css-selector (css/get-css D)) => ".fulcro-css_css-spec_D__a ~ .fulcro-css_css-spec_D__b"
     "Multiple different selectors"
-    (css/get-css E) => '([#garden.selectors.CSSSelector{:selector ".fulcro-css_css-spec_E__a + .b > span"} {:color "brown"}])
+    (first-css-selector (css/get-css E)) => ".fulcro-css_css-spec_E__a + .b > span"
     "Get classnames"
     (css/get-classnames F) => {:a "fulcro-css_css-spec_F__a"
                                :b "b"
@@ -188,12 +191,12 @@
 
 (specification "Special &-selector"
   (assertions
-      "Get CSS rules"
+    "Get CSS rules"
     (css/get-css G) => '([:.fulcro-css_css-spec_G__a {:color "orange"}
-                         [:&.fulcro-css_css-spec_G__b {:font-weight "bold"}]
-                         [:&.c {:background-color "black"}]]
-                        [:.d {:color "green"}
-                         [:&.e {:color "gray"}]])
+                          [:&.fulcro-css_css-spec_G__b {:font-weight "bold"}]
+                          [:&.c {:background-color "black"}]]
+                          [:.d {:color "green"}
+                           [:&.e {:color "gray"}]])
     "Get classnames"
     (css/get-classnames G) => {:a "fulcro-css_css-spec_G__a"
                                :b "fulcro-css_css-spec_G__b"
