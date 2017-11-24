@@ -2,8 +2,8 @@
   (:require #?(:cljs [fulcro-spec.core :refer-macros [specification assertions behavior]]
                :clj [fulcro-spec.core :refer [specification assertions behavior]])
                     [fulcro-css.css :as css]
-                    [om.next :as om :refer [defui]]
-                    [om.dom :as dom]
+                    [fulcro.client.primitives :as prim :refer [defui]]
+                    [fulcro.client.dom :as dom]
                     [garden.selectors :as sel]))
 
 (defui ListItem

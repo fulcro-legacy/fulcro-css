@@ -2,8 +2,8 @@
   (:require #?(:cljs [fulcro-spec.core :refer-macros [specification assertions behavior]]
                :clj [fulcro-spec.core :refer [specification assertions behavior]])
                     [fulcro-css.core :as css]
-                    [om.next :as om :refer [defui]]
-                    [om.dom :as dom]))
+                    [fulcro.client.primitives :as prim :refer [defui]]
+                    [fulcro.client.dom :as dom]))
 
 (defui Child
   static css/CSS
@@ -12,7 +12,7 @@
       [p {:font-weight 'bold}]))
   Object
   (render [this]
-    (let [{:keys [id label]} (om/props this)]
+    (let [{:keys [id label]} (prim/props this)]
       (dom/div nil "Hello"))))
 
 (defui Child2
@@ -23,7 +23,7 @@
       [[p {:font-weight 'bold}] [p2 {:font-weight 'normal}]]))
   Object
   (render [this]
-    (let [{:keys [id label]} (om/props this)]
+    (let [{:keys [id label]} (prim/props this)]
       (dom/div nil "Hello"))))
 
 (specification "CSS local classes"
