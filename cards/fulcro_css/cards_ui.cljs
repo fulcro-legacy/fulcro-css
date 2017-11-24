@@ -1,35 +1,35 @@
 (ns fulcro-css.cards-ui
-  (:require-macros
-    [devcards.core :refer [defcard-om-next]])
-  (:require [om.dom :as dom]
+  (:require [fulcro.client.dom :as dom]
+            [devcards.core :as dc]
             [fulcro-css.css :as css]
-            [om.next :as om :refer [defui]]))
+            [fulcro.client.cards :refer [defcard-fulcro]]
+            [fulcro.client.primitives :as prim :refer [defui]]))
 
 (defui ListItem
   static css/CSS
-  (local-rules [this] [[:.item {:font-weight "bold"}]])
+  (local-rules [this] [[:.item {:color "red" :text-decoration "underline"}]])
   (include-children [this] [])
   Object
   (render [this]
-    (let [{:keys [label]} (om/props this)
+    (let [{:keys [label]} (prim/props this)
           {:keys [item]} (css/get-classnames ListItem)]
       (dom/li #js {:className item} label))))
 
-(def ui-list-item (om/factory ListItem {:keyfn :id}))
+(def ui-list-item (prim/factory ListItem {:keyfn :id}))
 
 (defui ListComponent
   static css/CSS
-  (local-rules [this] [[:.items-wrapper {:background-color "blue"}]])
+  (local-rules [this] [[:.items-wrapper {:color "blue"}]])
   (include-children [this] [ListItem])
   Object
   (render [this]
-    (let [{:keys [id items]} (om/props this)
+    (let [{:keys [id items]} (prim/props this)
           {:keys [items-wrapper]} (css/get-classnames ListComponent)]
       (dom/div #js {:className items-wrapper}
         (dom/h2 nil (str "List " id))
         (dom/ul nil (map ui-list-item items))))))
 
-(def ui-list (om/factory ListComponent {:keyfn :id}))
+(def ui-list (prim/factory ListComponent {:keyfn :id}))
 
 (defui Root
   static css/CSS
@@ -46,12 +46,6 @@
 
 (css/upsert-css "my-css" Root)
 
-(defn reader [{:keys [state query]} k p]
-  {:value nil})
-
-(def parser (om/parser {:read reader}))
-
-(defcard-om-next
+(defcard-fulcro
   "Embedded CSS Demo"
-  Root
-  (om/reconciler {:state {} :parser parser}))
+  Root)

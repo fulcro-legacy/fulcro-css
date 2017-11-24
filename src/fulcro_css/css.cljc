@@ -2,7 +2,7 @@
   (:require [cljs.tagged-literals]
             [clojure.string :as str]
             [com.rpl.specter :as sp]
-            [om.next :as om]
+            [fulcro.client.primitives :as prim]
             [garden.core :as g]
             [garden.selectors :as gs]
             [cljs.core]
