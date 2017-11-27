@@ -6,7 +6,8 @@
             [garden.core :as g]
             [garden.selectors :as gs]
             [cljs.core]
-            [fulcro-css.core :as oc]))
+            [fulcro-css.core :as oc]
+            [fulcro.client.dom :as dom]))
 
 (defprotocol CSS
   (local-rules [this] "Specifies the component's local CSS rules")
@@ -174,6 +175,12 @@
         local-classnames (zipmap (map remove-prefix-kw local-class-keys) (map #(local-class comp %) local-class-keys))
         global-classnames (zipmap global-class-keys (map name global-class-keys))]
     (merge local-classnames global-classnames)))
+
+#?(:cljs
+   (defn style-element
+     "Returns a React Style element with the (recursive) CSS of the given component. Useful for directly embedding in your UI VDOM."
+     [component]
+     (dom/style (clj->js {:dangerouslySetInnerHTML {:__html (g/css (get-css component))}})) ))
 
 #?(:cljs
    (defn upsert-css
