@@ -8,8 +8,8 @@ component CSS.
 <img src="https://clojars.org/fulcrologic/fulcro-css/latest-version.svg">
 </a>
 
-Release: <a href="https://github.com/fulcrologic/fulcro-css/tree/master"><img src="https://api.travis-ci.org/fulcrologic/fulcro-css.svg?branch=master"></a>
-Develop: <a href="https://github.com/fulcrologic/fulcro-css/tree/develop"><img src="https://api.travis-ci.org/fulcrologic/fulcro-css.svg?branch=develop"></a>
+Release: [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
+Development: [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop)
 
 ## Usage
 
