@@ -8,10 +8,20 @@ component CSS.
 <img src="https://clojars.org/fulcrologic/fulcro-css/latest-version.svg">
 </a>
 
+Release [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
+Development [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop)
+2.0 SNAPSHOTS [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/2.0.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/2.0)
 
 ## Usage
 
-This library requires `[org.omcljs/om "1.0.0-beta1"]` or above.
+Om or Fulcro 1.x:
+
+- Use `[fulcrologic/fulcro-css 1.x.x]`
+- Require `[org.omcljs/om "1.0.0-beta1"]` or above.
+
+Fulcro 2.0
+
+- Use `[fulcrologic/fulcro-css 2.0.0-SNAPSHOT]` or above
 
 A typical file will have the following shape:
 
