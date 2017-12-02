@@ -6,7 +6,7 @@
 
   :dependencies [[org.clojure/clojure "1.9.0-alpha17" :scope "provided"]
                  [org.clojure/clojurescript "1.9.671" :scope "provided"]
-                 [org.omcljs/om "1.0.0-beta1" :scope "provided"]
+                 [org.omcljs/om "1.0.0-beta1" :scope "test"]
                  [lein-doo "0.1.7" :scope "test"]
                  [fulcrologic/fulcro "1.0.0-beta2" :scope "test"]
                  [garden "1.3.2"]

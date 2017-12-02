@@ -2,11 +2,8 @@
   #?(:cljs (:require-macros fulcro-css.core))
   (:require [cljs.tagged-literals]
             [clojure.string :as str]
-            [com.rpl.specter :as sp]
             [garden.core :as g]
-            [om.next :as om]
             [cljs.core]))
-
 
 (defprotocol CSS
   (css [this] "Specifies the component-local CSS"))
