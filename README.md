@@ -4,16 +4,21 @@ This library provides some utility functions that help you use
 [garden](https://github.com/noprompt/garden) for co-located, localized
 component CSS. 
 
-<a href="https://clojars.org/fulcrologic/fulcro-css">
-[fulcrologic/fulcro-css "1.0.0"]
-</a>
+Current Production Version: \[fulcrologic/fulcro-css "1.0.0"]
 
-Release: [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
-Development: [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop)
+Upcoming 2.x Release [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
+Development [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop)
 
 ## Usage
 
-This library requires `[org.omcljs/om "1.0.0-beta1"]` or above.
+Om or Fulcro 1.x:
+
+- Use `[fulcrologic/fulcro-css 1.0.0]`
+- Require `[org.omcljs/om "1.0.0-beta1"]` or above.
+
+Fulcro 2.0
+
+- Use `[fulcrologic/fulcro-css 2.0.0-beta1]` or above
 
 A typical file will have the following shape:
 
