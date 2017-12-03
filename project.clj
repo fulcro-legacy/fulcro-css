@@ -1,4 +1,4 @@
-(defproject fulcrologic/fulcro-css "2.0.0-SNAPSHOT"
+(defproject fulcrologic/fulcro-css "2.0.0-beta1"
   :description "A composable library for co-located CSS on Fulcro UI components"
   :url ""
   :license {:name "MIT"
@@ -10,8 +10,8 @@
                  [com.rpl/specter "1.0.2"]
 
                  [lein-doo "0.1.7" :scope "test"]
-                 [fulcrologic/fulcro "2.0.0-alpha2" :scope "test"]
-                 [fulcrologic/fulcro-spec "2.0.0-alpha2" :scope "test"]]
+                 [fulcrologic/fulcro "2.0.0-beta1" :scope "test"]
+                 [fulcrologic/fulcro-spec "2.0.0-beta1" :scope "test"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.8"]
