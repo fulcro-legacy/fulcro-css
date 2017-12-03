@@ -5,7 +5,7 @@ This library provides some utility functions that help you use
 component CSS. 
 
 <a href="https://clojars.org/fulcrologic/fulcro-css">
-<img src="https://clojars.org/fulcrologic/fulcro-css/latest-version.svg">
+[fulcrologic/fulcro-css "1.0.0"]
 </a>
 
 Release: [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
