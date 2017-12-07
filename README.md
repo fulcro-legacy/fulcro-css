@@ -4,29 +4,63 @@ This library provides some utility functions that help you use
 [garden](https://github.com/noprompt/garden) for co-located, localized
 component CSS. 
 
-Current Production Version: \[fulcrologic/fulcro-css "1.0.0"]
-
-Upcoming 2.x Release [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
+Release [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
 Development [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop)
 
 ## Usage
 
-Om or Fulcro 1.x:
-
-- Use `[fulcrologic/fulcro-css 1.0.0]`
-- Require `[org.omcljs/om "1.0.0-beta1"]` or above.
-
-Fulcro 2.0
-
-- Use `[fulcrologic/fulcro-css 2.0.0-beta1]` or above
-
 A typical file will have the following shape:
+
+Using Fulcro 2.x `defsc`:
+
+```clj
+(ns my-ui
+  (:require [fulcro.client.dom :as dom]
+            [fulcro-css.css :as css]
+            [fulcro.client.primitives :as prim :refer [defui defsc]]))
+
+; the item binding is destructured as the fourth param. The actual CSS classname
+; will be namespaced to the component as my_ui_ListItem__item, but will be available
+; as the value :item in css-classnames map parameter, so you can easily
+; destructure if and use it in the DOM without having to worry about how it is prefixed.
+(defsc ListItem [this {:keys [label] :as props} computed {:keys [item] :as css-classes}]
+  {:css [[:.item {:font-weight "bold"}]]}
+  (dom/li #js {:className item} label))
+
+(def ui-list-item (om/factory ListItem {:keyfn :id}))
+
+(defsc ListComponent [this {:keys [id items]} computed {:keys [items-wrapper]}]
+  {:css [[:.items-wrapper {:background-color "blue"}]] ; this component's css
+   :css-include [ListItem]} ; components whose CSS should be included if this component is included
+  (dom/div #js {:className items-wrapper}
+    (dom/h2 nil (str "List " id))
+    (dom/ul nil (map ui-list-item items))))
+
+(def ui-list (om/factory ListComponent {:keyfn :id}))
+
+(defsc Root [this props computed {:keys [text]}]
+  {:css [[:.container {:background-color "red"}]]
+   :css-include [ListComponent]
+   :protocols   [static css/Global
+                 (global-rules [this] [[:.text {:color "yellow"}]])]}
+    (let [the-list {:id 1 :items [{:id 1 :label "A"} {:id 2 :label "B"}]}]
+      (dom/div #js {:className text}
+        (ui-list the-list))))
+
+; ...
+
+; Add the CSS from Root as a HEAD style element. If it already exists, replace it. This
+; will recursively follow all of the CSS includes *just* for components that Root includes!
+(css/upsert-css "my-css" Root)
+```
+
+Using Om Next-style `defui`:
 
 ```clj
 (ns fulcro-css.css-spec
-  (:require [om.dom :as dom]
+  (:require [fulcro.client.dom :as dom]
             [fulcro-css.css :as css]
-            [om.next :as om :refer [defui]]))
+            [fulcro.client.primitives :as prim :refer [defui defsc]]))
 
 (defui ListItem
   static css/CSS
