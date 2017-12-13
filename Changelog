@@ -1,3 +1,8 @@
+2.0.0
+-----
+- Updated to work with Fulcro 2.0
+- Deprecated Global protocol in favor of `$` prefixing
+
 1.1.1
 -----
 - Renamed project

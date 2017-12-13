@@ -1,4 +1,4 @@
-(defproject fulcrologic/fulcro-css "2.0.0-beta1"
+(defproject fulcrologic/fulcro-css "2.0.0"
   :description "A composable library for co-located CSS on Fulcro UI components"
   :url ""
   :license {:name "MIT"
