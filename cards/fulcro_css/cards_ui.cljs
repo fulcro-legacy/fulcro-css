@@ -33,10 +33,9 @@
 
 (defui Root
   static css/CSS
-  (local-rules [this] [[:.container {:background-color "red"}]])
+  (local-rules [this] [[:$text {:color "yellow"}]
+                       [:.container {:background-color "red"}]])
   (include-children [this] [ListComponent])
-  static css/Global
-  (global-rules [this] [[:.text {:color "yellow"}]])
   Object
   (render [this]
     (let [{:keys [text]} (css/get-classnames Root)

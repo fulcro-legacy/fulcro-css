@@ -40,9 +40,7 @@ Using Fulcro 2.x `defsc`:
 
 (defsc Root [this props computed {:keys [text]}]
   {:css [[:.container {:background-color "red"}]]
-   :css-include [ListComponent]
-   :protocols   [static css/Global
-                 (global-rules [this] [[:.text {:color "yellow"}]])]}
+   :css-include [ListComponent]}
     (let [the-list {:id 1 :items [{:id 1 :label "A"} {:id 2 :label "B"}]}]
       (dom/div #js {:className text}
         (ui-list the-list))))
@@ -92,8 +90,6 @@ Using Om Next-style `defui`:
   static css/CSS
   (local-rules [this] [[:.container {:background-color "red"}]])
   (include-children [this] [ListComponent])
-  static css/Global
-  (global-rules [this] [[:.text {:color "yellow"}]])
   Object
   (render [this]
     (let [{:keys [text]} (css/get-classnames Root)
@@ -112,16 +108,16 @@ CSS can be co-located on any Om `defui` component. This CSS does *not* take effe
  
 1. Add localized rules to your component via the `fulcro-css.css/CSS` protocol `local-rules` method which returns 
  a vector in Garden notation. Any rules included here will be automatically prefixed with the CSSified namespace 
- and component name to ensure name collisions are impossible. To prevent this localization you can prefix a rule with a `$`  character (`:$container`) instead of a `.` (`:.container`), these rules will *not* be namespaced.
+ and component name to ensure name collisions are impossible. 
+ *To prevent this localization* you can prefix a rule with a `$`  character (`:$container`) instead of a `.` (`:.container`), 
+ these rules will *not* be namespaced.
 2. Add the `include-children` protocol method. This method MUST return a vector (which can be empty). It should
-include the Om component names for any components that are used within the `render` that also supply CSS. This
+include the component names for any components that are used within the `render` that also supply CSS. This
 allows the library to compose together your CSS according to what components you *use*.
-3. (optional) Add the `fulcro-css.css/Global` protocol to emit garden rules that will *not* be namespaced. This, any
-rule emitted from here will be exactly the name you use.
-4. Use the `fulcro-css.css/get-classnames` function to get a map keyed by the simple name you used in your garden rules. 
+3. Use the `fulcro-css.css/get-classnames` function to get a map keyed by the simple name you used in your garden rules. 
  The values of the return map are the localized names. This allows you to use the more complex classnames without having to know what
 they actually are.
-5. Use the `fulcro-css.css/upsert-css` function to embed the CSS.
+4. Use the `fulcro-css.css/upsert-css` function (or your own style element) to embed the CSS.
 
 In the above example, the upsert results in this CSS on the page:
 
