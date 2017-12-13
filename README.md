@@ -155,7 +155,8 @@ with a DOM for the UI of:
 </div>
 ```
 
-``Garden's selectors`` are supported. These include the *CSS combinators* and the special `&` selector. Using the `$`-prefix will also prevent the selectors from being localized.
+``Garden's selectors`` are supported. These include the *CSS combinators* and the special `&` selector. Using the 
+`$`-prefix will also prevent the selectors from being localized.
 
 ```clj
   (local-rules [this] [[(garden.selectors/> :.a :$b) {:color "blue"}]])
