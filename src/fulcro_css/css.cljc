@@ -14,7 +14,7 @@
   (include-children [this] "Specifies the components (typically direct children) whose CSS should be included."))
 
 (defprotocol Global
-  (global-rules [this] "Specifies the component's global CSS rules"))
+  (global-rules [this] "DEPRECATED. Will be removed in a future release. Do not use for new applications. Use the `$` prefix instead."))
 
 #?(:clj (defn implements-protocol?
           [x protocol protocol-key]
