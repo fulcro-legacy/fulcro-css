@@ -4,6 +4,8 @@ This library provides some utility functions that help you use
 [garden](https://github.com/noprompt/garden) for co-located, localized
 component CSS. 
 
+[![Clojars Project](https://img.shields.io/clojars/v/fulcrologic/fulcro-css.svg)](https://clojars.org/fulcrologic/fulcro-css)
+
 Release [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
 Development [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop)
 
