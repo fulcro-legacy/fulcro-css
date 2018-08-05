@@ -9,6 +9,13 @@ component CSS.
 Release [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/master)
 Development [![CircleCI](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop.svg?style=svg)](https://circleci.com/gh/fulcrologic/fulcro-css/tree/develop)
 
+# End of Maintenance Notice
+
+This library has been combined with Fulcro.  It will no longer be
+maintained as a stand-alone library.  If a new maintainer would
+like to take over for the Om Next community, then please
+contact us, and we'll be happy to link to a fork of this repository.
+
 ## Usage
 
 A typical file will have the following shape:
